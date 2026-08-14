@@ -1,0 +1,20 @@
+# Magisk system-mode boot hook (SELinux-disabled BlueStacks guest).
+# Installed at /system/etc/init/magisk.rc. init parses /system/etc/init/*.rc.
+on post-fs-data
+    exec - root root -- /system/etc/init/magisk/magisk64 --auto-selinux --setup-sbin /system/etc/init/magisk /sbin
+    exec - root root -- /sbin/magisk --auto-selinux --post-fs-data
+
+on nonencrypted
+    exec - root root -- /sbin/magisk --auto-selinux --service
+
+on property:vold.decrypt=trigger_restart_framework
+    exec - root root -- /sbin/magisk --auto-selinux --service
+
+on property:sys.boot_completed=1
+    exec - root root -- /sbin/magisk --auto-selinux --boot-complete
+
+on property:init.svc.zygote=restarting
+    exec - root root -- /sbin/magisk --auto-selinux --zygote-restart
+
+on property:init.svc.zygote=stopped
+    exec - root root -- /sbin/magisk --auto-selinux --zygote-restart

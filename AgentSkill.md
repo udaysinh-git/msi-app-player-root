@@ -158,11 +158,24 @@ persistent, verified by rebooting the instance.
 ## When to escalate to full Magisk
 
 Plain root covers full device access. Escalate only if you need managed su
-prompts, Zygisk, module support, or DenyList to hide root from apps. That requires
-offline injection of the Magisk `/system` payload plus a `bootanim.rc` hijack that
-starts `magiskd` and populates `/data/adb/magisk` at boot. `/data` is writable at
-runtime, so the boot script can do the `/data/adb` setup. This is more work and
-can boot-loop if the hook is wrong; keep the working setuid `su` as the fallback.
+prompts, Zygisk, module support, or DenyList. The working system-mode recipe is in
+`magisk/` (`MAGISK.md`). Key points learned:
+
+- No boot image to patch. Install to `/system/etc/init/magisk/` and add a
+  `/system/etc/init/magisk.rc` whose post-fs-data runs
+  `magisk64 --auto-selinux --setup-sbin /system/etc/init/magisk /sbin`, then the
+  `--post-fs-data` / `--service` / `--boot-complete` / `--zygote-restart` stages.
+  The authoritative recipe is `direct_install_system` in the app APK
+  (`res/p9.sh`).
+- `magisk --daemon` from an adb shell dies (its tmpfs mount is in a private
+  namespace torn down when the shell exits). It must be launched by init, so the
+  boot hook is mandatory.
+- Native Magisk Zygisk does not inject zygote in system mode. Use ReZygisk
+  (ptrace), set Magisk built-in `zygisk=0`, and restart zygote once early in boot
+  (`/data/adb/service.d/00zygote-kick.sh`) because ReZygisk's monitor starts after
+  the first zygote fork.
+- Keep the setuid `su` as a fallback while testing; the boot hook failing does not
+  boot-loop (execs are oneshot), but a working fallback saves cycles.
 
 ## Safety
 

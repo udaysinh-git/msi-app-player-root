@@ -109,6 +109,10 @@ Needs full Magisk, not plain su:
 - DenyList to hide root from apps that block rooted devices.
 - Managed per-app su prompts.
 
+Full Magisk (system mode) is available on top of the bootstrap su: persistent
+`magiskd`, managed su, modules, and Zygisk + DenyList via ReZygisk. See
+`magisk/MAGISK.md`.
+
 ## Files
 
 - `su.c` setuid su source.
@@ -119,6 +123,9 @@ Needs full Magisk, not plain su:
 - `SHA256SUMS` checksum for `prebuilt/su`.
 - `AgentSkill.md` step-by-step runbook, including the enforcing-SELinux and other
   emulator instances (Rvc64, Tiramisu64) branches.
+- `magisk/` full Magisk system-mode install (daemon, su, modules, Zygisk +
+  DenyList via ReZygisk). See `magisk/MAGISK.md`.
+- `NOTES.md` field notes: every problem hit during this build and its fix.
 
 ## Notes
 
