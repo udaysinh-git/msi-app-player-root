@@ -73,6 +73,8 @@ Expected: `uid=0(root) gid=0(root) groups=0(root)`. Port `5555` does not work; u
 - `prebuilt/su` compiled x86_64 binary (NDK, API 28).
 - `reinject.sh` WSL2 mount and copy.
 - `reroot.ps1` full stop/inject/boot cycle.
+- `AgentSkill.md` step-by-step runbook, including the enforcing-SELinux and other
+  emulator instances (Rvc64, Tiramisu64) branches.
 
 ## Notes
 
